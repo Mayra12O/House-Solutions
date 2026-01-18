@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>House Solutions - Catálogo</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header>
+        <img src="assets/logo.png" alt="Logo House Solutions" class="logo" />
+        <div class="acciones-header">
+            <span onclick="toggleBusqueda()">🔍 Buscar</span>
+            <span onclick="mostrarCarrito()">🛒 Carrito</span>
+            <span onclick="cerrarSesion()">🚪 Cerrar sesión</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="grid-productos" id="listaProductos">
+            <!-- Ejemplo productos -->
+            <div class="producto" data-nombre="Arroz">
+                <img src="assets/arroz.png" alt="Arroz" />
+                <h3>Arroz</h3>
+                <p>$4.500/kg</p>
+                <input type="number" id="cantidad-Arroz" min="1" placeholder="Kg" />
+                <button onclick="agregarAlCarrito('Arroz', 4500)">🛒 Añadir</button>
+            </div>
+
+            <!-- Más productos aquí... -->
+            <div class="producto" data-nombre="Frijol">
+                <img src="assets/frijol.png" alt="Frijol" />
+                <h3>Frijol</h3>
+                <p>$8.600/kg</p>
+                <input type="number" id="cantidad-Frijol" min="1" placeholder="Kg" />
+                <button onclick="agregarAlCarrito('Frijol', 8600)">🛒 Añadir</button>
+            </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 House Solutions</p>
+    </footer>
+
+    <script>
+        // Mostrar/Ocultar buscador
+        function toggleBusqueda() {
+            const buscador = document.getElementById('buscador');
+            buscador.style.display = buscador.style.display === 'none' || buscador.style.display === '' ? 'block' : 'none';
+        }
+
+        // Filtrar productos por nombre
+        function filtrarProductos() {
+            const filtro = document.getElementById('inputBusqueda').value.toLowerCase();
+            const productos = document.querySelectorAll('.producto');
+            productos.forEach((producto) => {
+                const nombre = producto.getAttribute('data-nombre').toLowerCase();
+                producto.style.display = nombre.includes(filtro) ? 'block' : 'none';
+            });
+        }
+
+        // Añadir producto al carrito (localStorage)
+        function agregarAlCarrito(nombre, precio) {
+            const input = document.getElementById(`cantidad-${nombre}`);
+            const cantidad = parseInt(input.value);
+
+            if (!cantidad || cantidad <= 0) {
+                alert('⚠️ Ingresa una cantidad válida.');
+                return;
+            }
+
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const item = carrito.find((p) => p.nombre === nombre);
+
+            if (item) {
+                item.cantidad += cantidad;
+            } else {
+                carrito.push({ nombre, precio, cantidad });
+            }
+
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            alert(`✅ ${cantidad} kg de ${nombre} añadidos al carrito.`);
+            input.value = '';
+        }
+
+        // Mostrar modal del carrito
+        function mostrarCarrito() {
+            const modal = document.getElementById('modalCarrito');
+            const lista = document.getElementById('listaCarrito');
+            const total = document.getElementById('totalCarrito');
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            lista.innerHTML = '';
+            let totalCompra = 0;
+
+            carrito.forEach((p, i) => {
+                const li = document.createElement('li');
+                const subtotal = p.precio * p.cantidad;
+                totalCompra += subtotal;
+
+                li.innerHTML = `
+                    ${p.nombre} x${p.cantidad} kg - $${subtotal.toLocaleString()}
+                    <button onclick="eliminarDelCarrito(${i})" style="margin-left:10px; color:red;">❌</button>
+                `;
+                lista.appendChild(li);
+            });
+
+            total.textContent = `Total: $${totalCompra.toLocaleString()}`;
+            modal.style.display = 'block';
+        }
+
+        // Eliminar item del carrito
+        function eliminarDelCarrito(index) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            carrito.splice(index, 1);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            mostrarCarrito();
+        }
+
+        // Cerrar modal carrito
+        function cerrarCarrito() {
+            document.getElementById('modalCarrito').style.display = 'none';
+        }
+
+        // Cerrar sesión (limpia localStorage y redirige)
+        function cerrarSesion() {
+            localStorage.clear();
+            alert('👋 Has cerrado sesión correctamente.');
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

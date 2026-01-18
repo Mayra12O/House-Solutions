@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperar Cuenta - House Solutions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px 0;
+            background-color: white;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            height: 80px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 93%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #mensajeRecuperar {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="assets/logo.png" alt="Logo de House Solutions" class="logo" />
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2>Recuperar Usuario o Contraseña</h2>
+            <p>Ingrese su correo electrónico para recibir instrucciones:</p>
+
+            <form id="formRecuperar">
+                <input type="email" id="recuperarCorreo" placeholder="Correo electrónico" required
+                    autocomplete="email" />
+                <button type="submit">Enviar</button>
+                <p id="mensajeRecuperar"></p>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api/usuarios/recuperar'; // Cambiar en producción si es necesario
+
+        document.getElementById('formRecuperar').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const correoInput = document.getElementById("recuperarCorreo");
+            const mensaje = document.getElementById("mensajeRecuperar");
+            const correo = correoInput.value.trim();
+
+            const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!regexCorreo.test(correo)) {
+                mensaje.style.color = "red";
+                mensaje.textContent = "❌ Ingresa un correo electrónico válido.";
+                return;
+            }
+
+            mensaje.style.color = "black";
+            mensaje.textContent = "⏳ Enviando solicitud...";
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ correo })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.exito) {
+                    // Guardar correo para la vista de restablecimiento
+                    try { localStorage.setItem('recoveryEmail', correo); } catch (e) { console.warn('No se pudo guardar en localStorage', e); }
+                    // Guardar el token JWT que envía el backend (si existe)
+                    if (data.token) {
+                        try { localStorage.setItem('recoveryToken', data.token); } catch (e) { console.warn('No se pudo guardar recoveryToken', e); }
+                    }
+
+                    mensaje.style.color = "green";
+                    mensaje.textContent = data.mensaje || "📧 Revisa tu correo para continuar.";
+
+
+                    setTimeout(() => {
+                    }, 5000);
+
+
+                    // Navegar a la página de restablecimiento; usar router.navigate si existe
+                    if (window.router && typeof window.router.navigate === 'function') {
+                        try {
+                            window.router.navigate('/reset_password.html');
+                            return;
+                        } catch (err) {
+                            console.warn('router.navigate falló, usando location.href', err);
+                        }
+                    }
+                    // Fallback: pasar token por query si quieres (no necesario si se guardó en localStorage)
+                    window.location.href = 'reset_password.html?email=' + encodeURIComponent(correo);
+                } else {
+                    mensaje.style.color = "red";
+                    mensaje.textContent = data.mensaje || "❌ No se pudo enviar el correo.";
+                }
+
+            } catch (error) {
+                console.error("Error al enviar:", error);
+                mensaje.style.color = "red";
+                mensaje.textContent = "❌ Error al conectarse al servidor.";
+            }
+        });
+    </script>
+</body>
+
+</html>

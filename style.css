@@ -1,0 +1,14 @@
+/* Icono del carrito en la interfaz */
+.carrito-icono {
+    float: right;
+    background: #eee;
+    padding: 10px;
+    margin-top: -60px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.carrito-icono:hover {
+    background-color: #ddd;
+}

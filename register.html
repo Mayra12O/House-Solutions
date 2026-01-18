@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Registrar Cuenta - House Solutions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px 0;
+            background-color: white;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            height: 80px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input,
+        form select {
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #recuperarLink {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #recuperarLink a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        #recuperarLink a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="assets/logo.png" alt="House Solutions Logo" class="logo" />
+    </header>
+
+    <main>
+        <form id="registroForm" onsubmit="crearCuenta(event)">
+            <input type="text" id="nombre" placeholder="Nombre completo" required autocomplete="name" />
+            <select id="tipoDoc" required>
+                <option value="">Tipo de documento</option>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="TI">Tarjeta de identidad</option>
+                <option value="CE">Cédula de extranjería</option>
+            </select>
+            <input type="text" id="doc" placeholder="Número de documento" required />
+            <input type="email" id="correo" placeholder="Correo electrónico" required autocomplete="email" />
+            <input type="text" id="telefono" placeholder="Teléfono" required autocomplete="tel" />
+            <select id="departamento" required>
+                <option value="">Departamento</option>
+                <option value="Quindío">Quindío</option>
+            </select>
+            <select id="ciudad" required>
+                <option value="">Ciudad</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Circasia">Circasia</option>
+                <option value="Calarcá">Calarcá</option>
+            </select>
+            <input type="text" id="barrio" placeholder="Barrio" required />
+            <input type="text" id="direccion" placeholder="Dirección" required />
+            <select id="pago" required>
+                <option value="">Forma de pago</option>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="Nequi">Nequi</option>
+                <option value="Daviplata">Daviplata</option>
+                <option value="PSE">PSE</option>
+            </select>
+            <input type="password" id="contrasena" placeholder="Crear contraseña" required
+                autocomplete="new-password" />
+
+            <button type="submit">Crear Cuenta</button>
+
+            <p id="mensaje"></p>
+            <div id="recuperarLink">
+                <a href="recuperar.html">¿Olvidó su contraseña? Recupérela aquí</a>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        function crearCuenta(e) {
+            e.preventDefault();
+
+            const mensaje = document.getElementById("mensaje");
+            const recuperarLink = document.getElementById("recuperarLink");
+
+            const datos = {
+                nombre: document.getElementById("nombre").value,
+                tipoDoc: document.getElementById("tipoDoc").value,
+                doc: document.getElementById("doc").value,
+                correo: document.getElementById("correo").value,
+                telefono: document.getElementById("telefono").value,
+                departamento: document.getElementById("departamento").value,
+                ciudad: document.getElementById("ciudad").value,
+                barrio: document.getElementById("barrio").value,
+                direccion: document.getElementById("direccion").value,
+                pago: document.getElementById("pago").value,
+                contrasena: document.getElementById("contrasena").value
+            };
+
+            fetch("http://localhost:3000/api/usuarios/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error("Respuesta del servidor no fue OK");
+                    return res.json();
+                })
+                .then((data) => {
+                    mensaje.style.color = data.exito ? "green" : "red";
+                    mensaje.textContent = data.mensaje ? data.mensaje : "";
+
+                    // Mostrar link de recuperar contraseña si usuario ya está registrado
+                    if (!data.exito && data.mensaje && data.mensaje.toLowerCase().includes("ya está registrado")) {
+                        recuperarLink.style.display = "block";
+                    } else if (!data.exito) {
+                        // Si hay otro error, ocultamos el link (opcional)
+                        recuperarLink.style.display = "none";
+                    } else {
+                        // Éxito: ocultamos link porque redirigiremos
+                        recuperarLink.style.display = "none";
+                    }
+
+                    if (data.exito) {
+                        setTimeout(() => {
+                            window.location.href = "login.html";
+                        }, 1500);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error:", err);
+                    mensaje.style.color = "red";
+                    mensaje.textContent = "❌ Error al conectar con el servidor.";
+                    mensaje.textContent = "❌ Usuario registrado.";
+                    // Mantener visible el link para recuperar contraseña si falla la conexión
+                    recuperarLink.style.display = "block";
+                });
+        }
+    </script>
+</body>
+
+</html>

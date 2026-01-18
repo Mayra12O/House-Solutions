@@ -1,0 +1,16 @@
+const request = require('supertest');
+const app = require('../app'); // Importa la app, no el servidor para evitar problemas al iniciar múltiples listeners
+
+describe('Usuarios', () => {
+  it('Registra un usuario', async () => {
+    const res = await request(app)
+      .post('/api/users/register')  // Asegúrate que esta ruta coincida con la que usas en tu router
+      .send({
+        name: 'Gilberto',
+        email: 'gilberto@prueba.com',
+        password: '123456'
+      });
+
+    expect(res.statusCode).toBe(201);
+  });
+});
