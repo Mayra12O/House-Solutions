@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recuperar Cuenta - House Solutions</title>
+    <script src="auth.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,6 +87,10 @@
 </head>
 
 <body>
+    <!-- Si ya está autenticado, redirige a index.html -->
+    <script>
+        redirectIfAuthenticated();
+    </script>
     <header>
         <img src="assets/logo.png" alt="Logo de House Solutions" class="logo" />
     </header>

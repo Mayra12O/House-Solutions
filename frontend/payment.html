@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pasarela de Pagos - House Solutions</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .button-group a {
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .button-group .back {
+            background: #6c757d;
+        }
+
+        .button-group .confirm {
+            background: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Pasarela de Pagos</h1>
+        <p>Estás por finalizar tu compra. Completa el formulario PSE y confirma el pago.</p>
+        <div id="resumenCarrito" style="text-align:left; margin-bottom: 20px;">
+            <h2 style="margin-bottom: 10px;">Resumen de tu compra</h2>
+            <div id="listaResumen" style="background:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:10px;">
+            </div>
+            <p id="totalResumen" style="font-weight:bold; margin:0;"></p>
+        </div>
+        <form id="pseForm" onsubmit="return procesarPago(event)">
+            <div style="margin-bottom: 16px; text-align: left;">
+                <label for="pseNombre" style="display:block; margin-bottom: 6px; font-weight: bold;">Nombre</label>
+                <input id="pseNombre" type="text" required placeholder="Nombre completo"
+                    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;" />
+            </div>
+            <div style="margin-bottom: 16px; text-align: left;">
+                <label for="pseEmail" style="display:block; margin-bottom: 6px; font-weight: bold;">Correo
+                    electrónico</label>
+                <input id="pseEmail" type="email" required placeholder="tu@correo.com"
+                    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;" />
+            </div>
+            <div style="margin-bottom: 16px; text-align: left;">
+                <label for="pseBanco" style="display:block; margin-bottom: 6px; font-weight: bold;">Banco</label>
+                <select id="pseBanco" required
+                    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+                    <option value="">Selecciona tu banco</option>
+                    <option value="nequi">Nequi</option>
+                    <option value="daviplata">Daviplata</option>
+                    <option value="dale">Dale</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <a href="index.html" class="back">Volver al catálogo</a>
+                <button type="submit" class="confirm" style="border:none; cursor:pointer;">Pagar con PSE</button>
+            </div>
+        </form>
+        <p id="paymentMessage" style="margin-top: 18px; color: #555;"></p>
+    </div>
+    <script>
+        function renderResumenCompra() {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const listaResumen = document.getElementById('listaResumen');
+            const totalResumen = document.getElementById('totalResumen');
+            listaResumen.innerHTML = '';
+
+            if (carrito.length === 0) {
+                listaResumen.innerHTML = '<p>Tu carrito está vacío.</p>';
+                totalResumen.textContent = '';
+                return;
+            }
+
+            let totalCompra = 0;
+            carrito.forEach(item => {
+                const subtotal = item.precio * item.cantidad;
+                totalCompra += subtotal;
+                const fila = document.createElement('p');
+                fila.style.margin = '6px 0';
+                fila.textContent = `${item.nombre} x${item.cantidad} kg - $${subtotal.toLocaleString()}`;
+                listaResumen.appendChild(fila);
+            });
+
+            totalResumen.textContent = `Total a pagar: $${totalCompra.toLocaleString()}`;
+        }
+
+        function procesarPago(event) {
+            event.preventDefault();
+            const nombre = document.getElementById('pseNombre').value.trim();
+            const email = document.getElementById('pseEmail').value.trim();
+            const banco = document.getElementById('pseBanco').value;
+
+            if (!nombre || !email || !banco) {
+                document.getElementById('paymentMessage').textContent = 'Completa todos los datos para continuar.';
+                return false;
+            }
+
+            document.getElementById('paymentMessage').textContent = 'Procesando pago...';
+            setTimeout(() => {
+                localStorage.removeItem('carrito');
+                window.location.href = 'index.html';
+            }, 1200);
+            return false;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderResumenCompra);
+    </script>
+</body>
+
+</html>

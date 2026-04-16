@@ -1,6 +1,6 @@
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
-const transporter = require('../../config/mailer');
+const transporter = require('../config/mailer');
 const jwt = require('jsonwebtoken'); // <-- añadido
 require('dotenv').config();
 

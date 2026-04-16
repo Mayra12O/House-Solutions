@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <title>Iniciar Sesión - House Solutions</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="auth.js"></script>
     <style>
         body {
             margin: 0;
@@ -103,6 +104,10 @@
 </head>
 
 <body>
+    <!-- Si ya está autenticado, redirige a index.html -->
+    <script>
+        redirectIfAuthenticated();
+    </script>
     <header>
         <img src="assets/logo.png" class="logo" alt="Logo House Solutions" />
         <h1>Iniciar Sesión</h1>
@@ -120,6 +125,11 @@
                 <a href="recuperar.html">¿Olvidó su usuario o contraseña?</a>
             </div>
 
+            <div class="registro" style="margin-top: 20px; text-align: center; padding-top: 15px; border-top: 1px solid #ddd;">
+                <p style="margin: 10px 0; font-size: 14px; color: #555;">¿No tienes cuenta?</p>
+                <a href="register.html" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s ease;">Crear Cuenta</a>
+            </div>
+
             <p id="mensaje" role="alert" aria-live="polite"></p>
         </form>
     </main>
@@ -134,7 +144,7 @@
             mensaje.textContent = "";
 
             try {
-                const response = await fetch("http://localhost:3000/api/usuarios/login", {
+                const response = await fetch("/api/usuarios/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ correo, contrasena })
@@ -144,6 +154,14 @@
 
                 if (!response.ok) {
                     throw new Error(data.mensaje || "Error en la autenticación");
+                }
+
+                // Guardar token si lo envía el servidor
+                if (data.token) {
+                    saveToken(data.token);
+                } else {
+                    // Si no hay token, usar el correo como identificador temporal
+                    saveToken(correo);
                 }
 
                 mensaje.style.color = "green";

@@ -8,8 +8,7 @@ const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/housesolutions';
 
 mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  // useNewUrlParser y useUnifiedTopology ahora son valores por defecto
 })
   .then(() => {
     console.log('✅ MongoDB conectado');
