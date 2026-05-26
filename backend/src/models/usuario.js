@@ -59,6 +59,11 @@ const userSchema = new mongoose.Schema({
         required: [true, 'La forma de pago es obligatoria'],
         enum: ['Efectivo', 'Tarjeta', 'Nequi', 'Daviplata', 'PSE']
     },
+    rol: {
+        type: String,
+        enum: ['cliente', 'empleado', 'admin'],
+        default: 'cliente'
+    },
     contrasena: {
         type: String,
         required: [true, 'La contraseña es obligatoria']

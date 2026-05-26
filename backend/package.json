@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "mongo": "mongod --dbpath ./mongo-data --bind_ip localhost --port 27017",
+    "start:all": "powershell -ExecutionPolicy Bypass -File ./start-mongo.ps1",
     "dev": "nodemon index.js",
     "test": "jest"
   },

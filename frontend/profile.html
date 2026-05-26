@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mi Perfil - House Solutions</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="auth.js"></script>
+</head>
+
+<body>
+    <script>
+        requireLogin();
+    </script>
+
+    <header>
+        <img src="assets/logo.png" alt="Logo House Solutions" class="logo" />
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button class="accion-btn" onclick="window.location.href='index.html'">🏠 Volver</button>
+            <button class="accion-btn" onclick="confirmLogout()">🚪 Salir</button>
+        </div>
+    </header>
+
+    <main style="padding: 24px; max-width: 900px; margin: 0 auto;">
+        <section style="margin-bottom: 24px;">
+            <h1>Mi perfil</h1>
+            <p>Actualiza tus datos personales. El número de documento no se puede modificar.</p>
+        </section>
+
+        <section style="background: white; border: 1px solid #e8e9eb; border-radius: 12px; padding: 24px;">
+            <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <div>
+                    <label for="perfilNombre">Nombre completo</label>
+                    <input id="perfilNombre" type="text" placeholder="Nombre completo"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="perfilCorreo">Correo electrónico</label>
+                    <input id="perfilCorreo" type="email" placeholder="Correo electrónico"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="perfilTelefono">Teléfono</label>
+                    <input id="perfilTelefono" type="text" placeholder="Teléfono"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="perfilTipoDoc">Tipo de documento</label>
+                    <select id="perfilTipoDoc"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+                        <option value="">Selecciona tipo de documento</option>
+                        <option value="CC">CC</option>
+                        <option value="TI">TI</option>
+                        <option value="CE">CE</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="perfilDoc">Número de documento</label>
+                    <input id="perfilDoc" type="text" readonly
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; background: #f5f5f5;" />
+                </div>
+                <div>
+                    <label for="perfilPago">Forma de pago</label>
+                    <select id="perfilPago"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+                        <option value="">Selecciona forma de pago</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                        <option value="Nequi">Nequi</option>
+                        <option value="Daviplata">Daviplata</option>
+                        <option value="PSE">PSE</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="perfilDepartamento">Departamento</label>
+                    <input id="perfilDepartamento" type="text" placeholder="Departamento"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="perfilCiudad">Ciudad</label>
+                    <input id="perfilCiudad" type="text" placeholder="Ciudad"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="perfilBarrio">Barrio</label>
+                    <input id="perfilBarrio" type="text" placeholder="Barrio"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <label for="perfilDireccion">Dirección</label>
+                    <input id="perfilDireccion" type="text" placeholder="Dirección"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <button onclick="guardarPerfil()"
+                    style="padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">Guardar
+                    cambios</button>
+                <span id="mensajePerfil" aria-live="polite"></span>
+            </div>
+        </section>
+
+        <section
+            style="background: white; border: 1px solid #e8e9eb; border-radius: 12px; padding: 24px; margin-top: 24px;">
+            <h2>Cambiar contraseña</h2>
+            <p>Ingresa tu contraseña actual y una nueva contraseña segura.</p>
+            <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <div>
+                    <label for="actualContrasena">Contraseña actual</label>
+                    <input id="actualContrasena" type="password" placeholder="Contraseña actual"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="nuevaContrasena">Nueva contraseña</label>
+                    <input id="nuevaContrasena" type="password" placeholder="Nueva contraseña"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+                <div>
+                    <label for="confirmarContrasena">Confirmar contraseña</label>
+                    <input id="confirmarContrasena" type="password" placeholder="Repite la nueva contraseña"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                </div>
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <button onclick="cambiarContrasena()"
+                    style="padding: 12px 20px; background: #198754; color: white; border: none; border-radius: 8px; cursor: pointer;">Actualizar
+                    contraseña</button>
+                <span id="mensajeContrasena" aria-live="polite"></span>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        async function cargarPerfil() {
+            try {
+                const response = await fetch(getApiUrl('/api/usuarios/me'), {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.mensaje || 'No se pudo cargar el perfil.');
+                }
+
+                const usuario = await response.json();
+                document.getElementById('perfilNombre').value = usuario.nombre || '';
+                document.getElementById('perfilCorreo').value = usuario.correo || '';
+                document.getElementById('perfilTelefono').value = usuario.telefono || '';
+                document.getElementById('perfilTipoDoc').value = usuario.tipoDoc || '';
+                document.getElementById('perfilDoc').value = usuario.doc || '';
+                document.getElementById('perfilPago').value = usuario.pago || '';
+                document.getElementById('perfilDepartamento').value = usuario.departamento || '';
+                document.getElementById('perfilCiudad').value = usuario.ciudad || '';
+                document.getElementById('perfilBarrio').value = usuario.barrio || '';
+                document.getElementById('perfilDireccion').value = usuario.direccion || '';
+            } catch (error) {
+                mostrarMensajePerfil(error.message, true);
+            }
+        }
+
+        function mostrarMensajePerfil(texto, esError = false) {
+            const mensaje = document.getElementById('mensajePerfil');
+            mensaje.textContent = texto;
+            mensaje.style.color = esError ? '#842029' : '#0f5132';
+        }
+
+        async function guardarPerfil() {
+            const data = {
+                nombre: document.getElementById('perfilNombre').value.trim(),
+                tipoDoc: document.getElementById('perfilTipoDoc').value,
+                correo: document.getElementById('perfilCorreo').value.trim(),
+                telefono: document.getElementById('perfilTelefono').value.trim(),
+                departamento: document.getElementById('perfilDepartamento').value.trim(),
+                ciudad: document.getElementById('perfilCiudad').value.trim(),
+                barrio: document.getElementById('perfilBarrio').value.trim(),
+                direccion: document.getElementById('perfilDireccion').value.trim(),
+                pago: document.getElementById('perfilPago').value
+            };
+
+            try {
+                const response = await fetch(getApiUrl('/api/usuarios/me'), {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.mensaje || 'No se pudo actualizar el perfil.');
+                }
+
+                saveUser(result.usuario);
+                mostrarMensajePerfil(result.mensaje || 'Perfil actualizado correctamente.');
+            } catch (error) {
+                mostrarMensajePerfil(error.message, true);
+            }
+        }
+
+        async function cambiarContrasena() {
+            const actual = document.getElementById('actualContrasena').value;
+            const nueva = document.getElementById('nuevaContrasena').value;
+            const confirmar = document.getElementById('confirmarContrasena').value;
+            const mensaje = document.getElementById('mensajeContrasena');
+            mensaje.textContent = '';
+
+            if (!actual || !nueva || !confirmar) {
+                mensaje.textContent = 'Por favor completa todos los campos de contraseña.';
+                mensaje.style.color = '#842029';
+                return;
+            }
+
+            if (nueva.length < 8) {
+                mensaje.textContent = 'La contraseña nueva debe tener al menos 8 caracteres.';
+                mensaje.style.color = '#842029';
+                return;
+            }
+
+            if (nueva !== confirmar) {
+                mensaje.textContent = 'Las contraseñas no coinciden.';
+                mensaje.style.color = '#842029';
+                return;
+            }
+
+            try {
+                const response = await fetch(getApiUrl('/api/usuarios/me/password'), {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify({ actualContrasena: actual, nuevaContrasena: nueva })
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.mensaje || 'No se pudo cambiar la contraseña.');
+                }
+
+                document.getElementById('actualContrasena').value = '';
+                document.getElementById('nuevaContrasena').value = '';
+                document.getElementById('confirmarContrasena').value = '';
+
+                mensaje.textContent = result.mensaje || 'Contraseña actualizada correctamente.';
+                mensaje.style.color = '#0f5132';
+            } catch (error) {
+                mensaje.textContent = error.message;
+                mensaje.style.color = '#842029';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarPerfil);
+    </script>
+</body>
+
+</html>

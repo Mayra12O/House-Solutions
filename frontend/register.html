@@ -173,7 +173,7 @@
                 contrasena: document.getElementById("contrasena").value
             };
 
-            fetch("/api/usuarios/register", {
+            fetch(getApiUrl('/api/usuarios/register'), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datos)

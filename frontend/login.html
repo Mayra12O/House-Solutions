@@ -125,9 +125,12 @@
                 <a href="recuperar.html">¿Olvidó su usuario o contraseña?</a>
             </div>
 
-            <div class="registro" style="margin-top: 20px; text-align: center; padding-top: 15px; border-top: 1px solid #ddd;">
+            <div class="registro"
+                style="margin-top: 20px; text-align: center; padding-top: 15px; border-top: 1px solid #ddd;">
                 <p style="margin: 10px 0; font-size: 14px; color: #555;">¿No tienes cuenta?</p>
-                <a href="register.html" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s ease;">Crear Cuenta</a>
+                <a href="register.html"
+                    style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s ease;">Crear
+                    Cuenta</a>
             </div>
 
             <p id="mensaje" role="alert" aria-live="polite"></p>
@@ -144,7 +147,7 @@
             mensaje.textContent = "";
 
             try {
-                const response = await fetch("/api/usuarios/login", {
+                const response = await fetch(getApiUrl('/api/usuarios/login'), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ correo, contrasena })
@@ -156,19 +159,19 @@
                     throw new Error(data.mensaje || "Error en la autenticación");
                 }
 
-                // Guardar token si lo envía el servidor
                 if (data.token) {
                     saveToken(data.token);
-                } else {
-                    // Si no hay token, usar el correo como identificador temporal
-                    saveToken(correo);
+                }
+
+                if (data.usuario) {
+                    saveUser(data.usuario);
                 }
 
                 mensaje.style.color = "green";
                 mensaje.textContent = data.mensaje || "Inicio de sesión exitoso";
 
                 setTimeout(() => {
-                    window.location.href = "dashboard.html";
+                    window.location.href = "index.html";
                 }, 1500);
             } catch (error) {
                 mensaje.style.color = "red";

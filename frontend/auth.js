@@ -9,12 +9,46 @@ function isAuthenticated() {
 }
 
 /**
+ * URL base para llamadas a la API.
+ * Usa el host actual si la página se sirve desde HTTP/S.
+ * Si la página se abre con file://, usa localhost:3000.
+ */
+const API_BASE_URL = window.location.protocol.startsWith('http')
+    ? window.location.origin
+    : 'http://localhost:3000';
+
+/**
+ * Construye la URL completa para una ruta de API.
+ * @param {string} path
+ */
+function getApiUrl(path) {
+    return `${API_BASE_URL}${path}`;
+}
+
+/**
+ * Devuelve el usuario autenticado almacenado en localStorage.
+ * @returns {Object|null}
+ */
+function getCurrentUser() {
+    const userJson = localStorage.getItem('user');
+    return userJson ? JSON.parse(userJson) : null;
+}
+
+/**
+ * Guarda la información del usuario en localStorage.
+ * @param {Object} user
+ */
+function saveUser(user) {
+    localStorage.setItem('user', JSON.stringify(user));
+}
+
+/**
  * Redirige a login si no está autenticado
  * Usar al inicio de páginas protegidas
  */
 function requireLogin() {
     if (!isAuthenticated()) {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
     }
 }
 
@@ -24,7 +58,27 @@ function requireLogin() {
  */
 function redirectIfAuthenticated() {
     if (isAuthenticated()) {
-        window.location.href = '/index.html';
+        window.location.href = 'index.html';
+    }
+}
+
+/**
+ * Devuelve true si el usuario autenticado es administrador.
+ * @returns {boolean}
+ */
+function isAdmin() {
+    const user = getCurrentUser();
+    return !!user && user.rol === 'admin';
+}
+
+/**
+ * Redirige a index.html si no es administrador.
+ * Usar en admin.html.
+ */
+function requireAdmin() {
+    requireLogin();
+    if (!isAdmin()) {
+        window.location.href = 'index.html';
     }
 }
 
@@ -49,6 +103,16 @@ function getToken() {
  */
 function logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     localStorage.removeItem('carrito');
-    window.location.href = '/login.html';
+    window.location.replace('login.html');
+}
+
+/**
+ * Pregunta si el usuario quiere cerrar sesión y la cierra en caso afirmativo.
+ */
+function confirmLogout() {
+    if (confirm('¿Estás seguro de cerrar la sesión?')) {
+        logout();
+    }
 }

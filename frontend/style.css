@@ -9,6 +9,309 @@
     transition: background-color 0.3s ease;
 }
 
+/* Variables y ajustes globales de tipografía y colores */
+:root {
+    --base-font-size: 16px;
+    /* base 16px */
+    --heading-size: 1.125rem;
+    /* ~18px */
+    --body-size: 1rem;
+    /* 16px */
+    --small-size: 0.95rem;
+    /* ~15px */
+    --btn-font-size: 1rem;
+    /* 16px */
+    --primary-color: #6d90bd;
+    /* Azul más suave para la marca */
+    --secondary-color: #ff8a5b;
+    /* Naranja más claro y suave */
+    --accent-color: #ffb07a;
+    /* Naranja pastel para hover */
+    --dark-bg: #243b56;
+    /* Azul marino suavizado */
+    --light-bg: #f6f8fb;
+    /* Fondo claro */
+}
+
+html {
+    font-size: var(--base-font-size);
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: var(--body-size);
+    color: #222;
+    line-height: 1.45;
+    background: linear-gradient(135deg, var(--light-bg) 0%, #f0f4f8 100%);
+}
+
 .carrito-icono:hover {
     background-color: #ddd;
+}
+
+/* Header con logo centrado y acciones debajo del logo */
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 20px;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #2f4d68 100%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+header .logo {
+    height: 130px;
+    max-width: 300px;
+    object-fit: contain;
+}
+
+.acciones-header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.accion-btn {
+    background: var(--secondary-color);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: var(--small-size);
+    color: white;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.accion-btn:hover,
+.accion-btn:focus-visible {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    outline: none;
+}
+
+.accion-btn:focus-visible {
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+/* Catálogo de productos en cuadrícula */
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: 18px;
+    padding: 20px;
+}
+
+.producto {
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid var(--secondary-color);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 360px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.producto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.producto img {
+    max-width: 100%;
+    height: 220px;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.producto h3 {
+    font-size: var(--heading-size);
+    margin: 6px 0 0 0;
+}
+
+.producto p {
+    font-size: var(--body-size);
+    margin: 4px 0 6px 0;
+    color: #333;
+}
+
+.producto input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: var(--body-size);
+    height: 44px;
+}
+
+.producto button {
+    padding: 12px 14px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #7a9dc1 100%);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: var(--btn-font-size);
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(109, 144, 189, 0.28);
+}
+
+.producto button:hover {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+    transform: scale(1.02);
+}
+
+/* Quantity control (+/-) */
+.cantidad-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.cantidad-control .cant-btn {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cantidad-control .cant-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.cantidad-control input[type="number"] {
+    width: 70px;
+    text-align: center;
+    padding: 8px;
+    height: 40px;
+}
+
+#listaCarrito {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#listaCarrito li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#listaCarrito li:last-child {
+    border-bottom: none;
+}
+
+.carrito-item-nombre {
+    flex: 2;
+    text-align: left;
+    font-weight: 500;
+}
+
+.carrito-item-precio {
+    flex: 1;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.carrito-item-eliminar {
+    background: transparent;
+    border: none;
+    color: #d00;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px 6px;
+}
+
+/* Quantity controls inside cart */
+.carrito-cantidad-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+}
+
+.carrito-cant-btn {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.95rem;
+    color: white;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.carrito-cant-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.carrito-cantidad {
+    min-width: 50px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .grid-productos {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+
+    .producto {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .grid-productos {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        padding: 20px 16px;
+    }
+
+    .acciones-header {
+        justify-content: center;
+        margin-top: 4px;
+    }
 }

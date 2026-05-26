@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestión de Usuarios - House Solutions</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="auth.js"></script>
+</head>
+
+<body>
+    <script>
+        requireAdmin();
+    </script>
+
+    <header>
+        <img src="assets/logo.png" alt="Logo House Solutions" class="logo" />
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button class="accion-btn" onclick="window.location.href='index.html'">🏠 Volver</button>
+            <button class="accion-btn" onclick="window.location.href='profile.html'">👤 Mi perfil</button>
+            <button class="accion-btn" onclick="confirmLogout()">🚪 Salir</button>
+        </div>
+    </header>
+
+    <main style="padding: 20px; max-width: 1100px; margin: 0 auto;">
+        <section style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h1>Zona de gestión de usuarios</h1>
+                <p>Panel para el personal de la empresa. Aquí puedes ver todos los usuarios registrados y eliminar
+                    cuentas si es necesario.</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin: 0; font-weight: bold;">Usuario: <span id="adminName"></span></p>
+                <p style="margin: 0; color: #555;">Rol: administrador</p>
+            </div>
+        </section>
+
+        <div style="margin-bottom: 18px; display: flex; gap: 12px; align-items: center;">
+            <input id="filtroUsuarios" type="search" placeholder="Buscar usuario por nombre, correo o documento"
+                style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;"
+                oninput="filtrarUsuarios()" />
+            <button onclick="cargarUsuarios()"
+                style="padding: 11px 16px; border-radius: 8px; background: #007bff; color: white; border: none; cursor: pointer;">Actualizar</button>
+        </div>
+
+        <section
+            style="margin-bottom: 24px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e8e9eb;">
+            <h2 style="margin-top: 0;">Crear nuevo usuario</h2>
+            <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <input id="nuevoNombre" placeholder="Nombre completo"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoCorreo" type="email" placeholder="Correo electrónico"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoDocumento" placeholder="Documento"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoTelefono" placeholder="Teléfono"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <select id="nuevoTipoDoc" style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+                    <option value="">Tipo de documento</option>
+                    <option value="CC">CC</option>
+                    <option value="TI">TI</option>
+                    <option value="CE">CE</option>
+                </select>
+                <select id="nuevoPago" style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+                    <option value="">Forma de pago</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Nequi">Nequi</option>
+                    <option value="Daviplata">Daviplata</option>
+                    <option value="PSE">PSE</option>
+                </select>
+                <input id="nuevoDepartamento" placeholder="Departamento"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoCiudad" placeholder="Ciudad"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoBarrio" placeholder="Barrio"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoDireccion" placeholder="Dirección"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <input id="nuevoContrasena" type="password" placeholder="Contraseña"
+                    style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+                <select id="nuevoRol" style="padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+                    <option value="cliente">Cliente</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            <div style="margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <button onclick="crearUsuario()"
+                    style="padding: 12px 18px; background: #198754; color: white; border: none; border-radius: 8px; cursor: pointer;">Crear
+                    usuario</button>
+                <span id="mensajeCreacion" style="align-self: center; color: #333;"></span>
+            </div>
+        </section>
+
+        <div id="alertaAdmin"
+            style="display:none; margin-bottom: 18px; padding: 14px 18px; border-radius: 8px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba;">
+        </div>
+
+        <table id="tablaUsuarios" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: left;">Nombre</th>
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: left;">Correo</th>
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: left;">Documento</th>
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: left;">Teléfono</th>
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: left;">Ciudad</th>
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: left;">Rol</th>
+                    <th style="padding: 14px; border: 1px solid #ddd; text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoUsuarios"></tbody>
+        </table>
+    </main>
+
+    <script>
+        let usuariosCache = [];
+
+        function mostrarAlerta(mensaje, tipo = 'warn') {
+            const alerta = document.getElementById('alertaAdmin');
+            alerta.style.display = 'block';
+            alerta.style.background = tipo === 'error' ? '#f8d7da' : '#d1e7dd';
+            alerta.style.color = tipo === 'error' ? '#842029' : '#0f5132';
+            alerta.style.borderColor = tipo === 'error' ? '#f5c2c7' : '#badbcc';
+            alerta.textContent = mensaje;
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 5000);
+        }
+
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch(getApiUrl('/api/usuarios'), {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.mensaje || 'No se pudo cargar la lista de usuarios.');
+                }
+
+                usuariosCache = await response.json();
+                renderizarUsuarios(usuariosCache);
+            } catch (error) {
+                mostrarAlerta(error.message, 'error');
+            }
+        }
+
+        function renderizarUsuarios(usuarios) {
+            const tbody = document.getElementById('cuerpoUsuarios');
+            tbody.innerHTML = '';
+
+            if (!usuarios.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="padding: 18px; text-align: center;">No hay usuarios registrados.</td></tr>';
+                return;
+            }
+
+            usuarios.forEach((usuario) => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td style="padding: 12px; border: 1px solid #ddd;">${usuario.nombre}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">${usuario.correo}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">${usuario.doc}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">${usuario.telefono}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">${usuario.ciudad}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; text-transform: capitalize;">
+                        <select id="rolUsuario-${usuario._id}" style="padding:6px 8px; border-radius:6px; border:1px solid #ccc; width:100%;">
+                            <option value="cliente" ${usuario.rol === 'cliente' ? 'selected' : ''}>Cliente</option>
+                            <option value="empleado" ${usuario.rol === 'empleado' ? 'selected' : ''}>Empleado</option>
+                            <option value="admin" ${usuario.rol === 'admin' ? 'selected' : ''}>Administrador</option>
+                        </select>
+                    </td>
+                    <td style="padding: 12px; border: 1px solid #ddd; text-align: center; display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
+                        <button onclick="actualizarRolUsuario('${usuario._id}')" style="padding: 8px 12px; border-radius: 6px; border: none; background: #0d6efd; color: white; cursor: pointer;">Guardar</button>
+                        <button onclick="eliminarUsuario('${usuario._id}')" style="padding: 8px 12px; border-radius: 6px; border: none; background: #dc3545; color: white; cursor: pointer;">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+
+        function filtrarUsuarios() {
+            const filtro = document.getElementById('filtroUsuarios').value.toLowerCase();
+            const usuariosFiltrados = usuariosCache.filter((usuario) => {
+                return usuario.nombre.toLowerCase().includes(filtro)
+                    || usuario.correo.toLowerCase().includes(filtro)
+                    || usuario.doc.toLowerCase().includes(filtro);
+            });
+            renderizarUsuarios(usuariosFiltrados);
+        }
+
+        async function eliminarUsuario(id) {
+            if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(getApiUrl(`/api/usuarios/${id}`), {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.mensaje || 'No se pudo eliminar el usuario.');
+                }
+
+                mostrarAlerta(result.mensaje, 'success');
+                usuariosCache = usuariosCache.filter((usuario) => usuario._id !== id);
+                renderizarUsuarios(usuariosCache);
+            } catch (error) {
+                mostrarAlerta(error.message, 'error');
+            }
+        }
+
+        async function actualizarRolUsuario(id) {
+            const select = document.getElementById(`rolUsuario-${id}`);
+            const nuevoRol = select ? select.value : null;
+            if (!nuevoRol) {
+                mostrarAlerta('Selecciona un rol válido.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(getApiUrl(`/api/usuarios/${id}/rol`), {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify({ rol: nuevoRol })
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.mensaje || 'No se pudo actualizar el rol.');
+                }
+
+                mostrarAlerta(result.mensaje, 'success');
+                cargarUsuarios();
+            } catch (error) {
+                mostrarAlerta(error.message, 'error');
+            }
+        }
+
+        async function crearUsuario() {
+            const data = {
+                nombre: document.getElementById('nuevoNombre').value.trim(),
+                tipoDoc: document.getElementById('nuevoTipoDoc').value,
+                doc: document.getElementById('nuevoDocumento').value.trim(),
+                correo: document.getElementById('nuevoCorreo').value.trim(),
+                telefono: document.getElementById('nuevoTelefono').value.trim(),
+                departamento: document.getElementById('nuevoDepartamento').value.trim(),
+                ciudad: document.getElementById('nuevoCiudad').value.trim(),
+                barrio: document.getElementById('nuevoBarrio').value.trim(),
+                direccion: document.getElementById('nuevoDireccion').value.trim(),
+                pago: document.getElementById('nuevoPago').value,
+                contrasena: document.getElementById('nuevoContrasena').value,
+                rol: document.getElementById('nuevoRol').value
+            };
+
+            const mensajeCreacion = document.getElementById('mensajeCreacion');
+            mensajeCreacion.textContent = '';
+
+            try {
+                const response = await fetch(getApiUrl('/api/usuarios/admin'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.mensaje || 'No se pudo crear el usuario.');
+                }
+
+                mensajeCreacion.style.color = '#0f5132';
+                mensajeCreacion.textContent = result.mensaje;
+                cargarUsuarios();
+                setTimeout(() => { mensajeCreacion.textContent = ''; }, 5000);
+            } catch (error) {
+                mensajeCreacion.style.color = '#842029';
+                mensajeCreacion.textContent = error.message;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('adminName').textContent = user.nombre;
+            }
+            cargarUsuarios();
+        });
+    </script>
+</body>
+
+</html>

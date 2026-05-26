@@ -16,11 +16,18 @@
     </script>
     <header>
         <img src="assets/logo.png" alt="Logo House Solutions" class="logo" />
-        <div class="acciones-header">
-            <span onclick="toggleBusqueda()">🔍 Buscar</span>
-            <span onclick="mostrarCarrito()">🛒 Carrito</span>
-            <span onclick="cerrarSesion()">🚪 Cerrar sesión</span>
-        </div>
+        <nav class="acciones-header" aria-label="Acciones del sitio">
+            <button type="button" class="accion-btn" onclick="toggleBusqueda()" aria-label="Buscar productos">🔍
+                Buscar</button>
+            <button type="button" class="accion-btn" onclick="mostrarCarrito()" aria-label="Abrir carrito">🛒
+                Carrito</button>
+            <button type="button" class="accion-btn" onclick="goProfile()" aria-label="Mi perfil">👤
+                Perfil</button>
+            <button id="adminBtn" class="accion-btn" onclick="goAdmin()" aria-label="Gestión de usuarios"
+                style="display:none;">🛠️ Gestión</button>
+            <button type="button" class="accion-btn" onclick="cerrarSesion()" aria-label="Cerrar sesión">🚪
+                Salir</button>
+        </nav>
     </header>
 
     <div id="buscador" style="display: none; padding: 20px; background: #f5f5f5; width: 100%;">
@@ -35,17 +42,84 @@
                 <img src="assets/arroz.png" alt="Arroz" />
                 <h3>Arroz</h3>
                 <p>$4.500/kg</p>
-                <input type="number" id="cantidad-Arroz" min="1" placeholder="Kg" />
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Arroz')">−</button>
+                    <input type="number" id="cantidad-Arroz" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Arroz')">+</button>
+                </div>
                 <button onclick="agregarAlCarrito('Arroz', 4500)">🛒 Añadir</button>
             </div>
 
-            <!-- Más productos aquí... -->
             <div class="producto" data-nombre="Frijol">
                 <img src="assets/frijol.png" alt="Frijol" />
                 <h3>Frijol</h3>
                 <p>$8.600/kg</p>
-                <input type="number" id="cantidad-Frijol" min="1" placeholder="Kg" />
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Frijol')">−</button>
+                    <input type="number" id="cantidad-Frijol" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Frijol')">+</button>
+                </div>
                 <button onclick="agregarAlCarrito('Frijol', 8600)">🛒 Añadir</button>
+            </div>
+
+            <div class="producto" data-nombre="Banano">
+                <img src="assets/banano.png" alt="Banano" />
+                <h3>Banano</h3>
+                <p>$2.300/kg</p>
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Banano')">−</button>
+                    <input type="number" id="cantidad-Banano" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Banano')">+</button>
+                </div>
+                <button onclick="agregarAlCarrito('Banano', 2300)">🛒 Añadir</button>
+            </div>
+
+            <div class="producto" data-nombre="Fresas">
+                <img src="assets/fresas.png" alt="Fresas" />
+                <h3>Fresas</h3>
+                <p>$15.000/kg</p>
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Fresas')">−</button>
+                    <input type="number" id="cantidad-Fresas" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Fresas')">+</button>
+                </div>
+                <button onclick="agregarAlCarrito('Fresas', 15000)">🛒 Añadir</button>
+            </div>
+
+            <div class="producto" data-nombre="Tomate">
+                <img src="assets/tomate.png" alt="Tomate" />
+                <h3>Tomate</h3>
+                <p>$4.200/kg</p>
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Tomate')">−</button>
+                    <input type="number" id="cantidad-Tomate" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Tomate')">+</button>
+                </div>
+                <button onclick="agregarAlCarrito('Tomate', 4200)">🛒 Añadir</button>
+            </div>
+
+            <div class="producto" data-nombre="Uvas">
+                <img src="assets/uvas.png" alt="Uvas" />
+                <h3>Uvas</h3>
+                <p>$18.000/kg</p>
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Uvas')">−</button>
+                    <input type="number" id="cantidad-Uvas" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Uvas')">+</button>
+                </div>
+                <button onclick="agregarAlCarrito('Uvas', 18000)">🛒 Añadir</button>
+            </div>
+
+            <div class="producto" data-nombre="Zanahoria">
+                <img src="assets/zanahoria.png" alt="Zanahoria" />
+                <h3>Zanahoria</h3>
+                <p>$3.800/kg</p>
+                <div class="cantidad-control">
+                    <button type="button" class="cant-btn" onclick="decrementar('Zanahoria')">−</button>
+                    <input type="number" id="cantidad-Zanahoria" min="1" step="1" value="1" />
+                    <button type="button" class="cant-btn" onclick="incrementar('Zanahoria')">+</button>
+                </div>
+                <button onclick="agregarAlCarrito('Zanahoria', 3800)">🛒 Añadir</button>
             </div>
         </div>
     </main>
@@ -113,7 +187,22 @@
 
             localStorage.setItem('carrito', JSON.stringify(carrito));
             mostrarNotificacion(`✅ ${cantidad} kg de ${nombre} añadidos al carrito.`);
-            input.value = '';
+            input.value = '1';
+        }
+
+        // Incrementar/decrementar cantidad
+        function incrementar(nombre) {
+            const input = document.getElementById(`cantidad-${nombre}`);
+            let val = parseInt(input.value) || 0;
+            val += 1;
+            input.value = val;
+        }
+
+        function decrementar(nombre) {
+            const input = document.getElementById(`cantidad-${nombre}`);
+            let val = parseInt(input.value) || 0;
+            val = Math.max(1, val - 1);
+            input.value = val;
         }
 
         // Mostrar notificación temporal
@@ -146,14 +235,40 @@
                 totalCompra += subtotal;
 
                 li.innerHTML = `
-                    ${p.nombre} x${p.cantidad} kg - $${subtotal.toLocaleString()}
-                    <button onclick="eliminarDelCarrito(${i})" style="margin-left:10px; color:red;">❌</button>
+                    <span class="carrito-item-nombre">${p.nombre}</span>
+                    <div class="carrito-cantidad-control">
+                        <button class="carrito-cant-btn" onclick="decrementarCarrito(${i})">−</button>
+                        <span class="carrito-cantidad">${p.cantidad} kg</span>
+                        <button class="carrito-cant-btn" onclick="incrementarCarrito(${i})">+</button>
+                    </div>
+                    <span class="carrito-item-precio">$${subtotal.toLocaleString()}</span>
+                    <button class="carrito-item-eliminar" onclick="eliminarDelCarrito(${i})" aria-label="Eliminar ${p.nombre}">❌</button>
                 `;
                 lista.appendChild(li);
             });
 
             total.textContent = `Total: $${totalCompra.toLocaleString()}`;
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
+        }
+
+        // Incrementar cantidad en el carrito
+        function incrementarCarrito(index) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if (carrito[index]) {
+                carrito[index].cantidad += 1;
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                mostrarCarrito();
+            }
+        }
+
+        // Decrementar cantidad en el carrito
+        function decrementarCarrito(index) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if (carrito[index]) {
+                carrito[index].cantidad = Math.max(1, carrito[index].cantidad - 1);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                mostrarCarrito();
+            }
         }
 
         // Eliminar item del carrito
@@ -195,6 +310,25 @@
                 logout(); // Usar función de auth.js
             }
         }
+
+        function goProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        function goAdmin() {
+            window.location.href = 'admin.html';
+        }
+
+        function updateAdminButton() {
+            const adminBtn = document.getElementById('adminBtn');
+            if (isAdmin()) {
+                adminBtn.style.display = 'inline-block';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+        }
+
+        updateAdminButton();
     </script>
 
     <script src="script.js"></script>

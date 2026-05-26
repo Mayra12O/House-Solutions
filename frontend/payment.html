@@ -12,8 +12,9 @@
             background-color: #f5f5f5;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 10px;
             text-align: center;
         }
 
@@ -22,8 +23,83 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            color: #222;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button-group a,
+        .button-group button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-group .back {
+            background: #6c757d;
+        }
+
+        .button-group .confirm {
+            background: #28a745;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
         }
 
         h1 {
@@ -71,21 +147,17 @@
             <p id="totalResumen" style="font-weight:bold; margin:0;"></p>
         </div>
         <form id="pseForm" onsubmit="return procesarPago(event)">
-            <div style="margin-bottom: 16px; text-align: left;">
-                <label for="pseNombre" style="display:block; margin-bottom: 6px; font-weight: bold;">Nombre</label>
-                <input id="pseNombre" type="text" required placeholder="Nombre completo"
-                    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;" />
+            <div class="form-group">
+                <label for="pseNombre">Nombre</label>
+                <input id="pseNombre" type="text" required placeholder="Nombre completo" />
             </div>
-            <div style="margin-bottom: 16px; text-align: left;">
-                <label for="pseEmail" style="display:block; margin-bottom: 6px; font-weight: bold;">Correo
-                    electrónico</label>
-                <input id="pseEmail" type="email" required placeholder="tu@correo.com"
-                    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;" />
+            <div class="form-group">
+                <label for="pseEmail">Correo electrónico</label>
+                <input id="pseEmail" type="email" required placeholder="tu@correo.com" />
             </div>
-            <div style="margin-bottom: 16px; text-align: left;">
-                <label for="pseBanco" style="display:block; margin-bottom: 6px; font-weight: bold;">Banco</label>
-                <select id="pseBanco" required
-                    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+            <div class="form-group">
+                <label for="pseBanco">Banco</label>
+                <select id="pseBanco" required>
                     <option value="">Selecciona tu banco</option>
                     <option value="nequi">Nequi</option>
                     <option value="daviplata">Daviplata</option>
