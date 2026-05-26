@@ -41,3 +41,9 @@ coverage/
 .env.development
 .env.production
 .env.test
+
+# Bases de datos locales y temporales
+backend/mongo-data/
+
+# Dependencias de Node (¡muy pesado!)
+node_modules/
