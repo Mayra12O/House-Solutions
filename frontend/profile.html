@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perfil - House Solutions</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="auth.js"></script>
+    <style>
+        body {
+            background: linear-gradient(180deg, #eef4fb 0%, #f8fbff 100%);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+            color: white;
+            box-shadow: 0 16px 36px rgba(31, 78, 121, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        header .logo {
+            height: 72px;
+        }
+
+        header .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        header .header-actions button {
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        header .header-actions button:hover {
+            background: rgba(255, 255, 255, 0.26);
+            transform: translateY(-1px);
+        }
+
+        main {
+            width: 100%;
+            padding: 32px 24px 40px;
+            flex: 1;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr;
+            gap: 24px;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: var(--surface);
+            border: 1px solid rgba(31, 79, 128, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(31, 79, 128, 0.08);
+            padding: 28px;
+        }
+
+        .profile-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            margin-bottom: 18px;
+        }
+
+        .field-group {
+            display: grid;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .field-group label {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .field-group input,
+        .field-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface-soft);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .profile-actions button {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .profile-actions button.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .profile-actions button.secondary {
+            background: #cfd9ef;
+            color: var(--text);
+        }
+
+        .profile-actions button:hover {
+            transform: translateY(-1px);
+        }
+
+        .profile-message {
+            margin-top: 12px;
+            font-weight: 700;
+            min-height: 24px;
+        }
+
+        @media (max-width: 920px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            header {
+                justify-content: center;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        requireLogin();
+    </script>
+    <header>
+        <img src="assets/logo.png" alt="Logo House Solutions" class="logo" />
+        <div class="header-actions">
+            <button onclick="window.location.href='index.html'">🏠 Volver al catálogo</button>
+            <button onclick="logout()">🚪 Cerrar sesión</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-grid">
+            <section class="profile-card">
+                <h2>Mi información</h2>
+                <form id="profileForm">
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="nombre">Nombre completo</label>
+                            <input id="nombre" name="nombre" type="text" required />
+                        </div>
+                        <div class="field-group">
+                            <label for="tipoDoc">Tipo de documento</label>
+                            <select id="tipoDoc" name="tipoDoc" required>
+                                <option value="CC">Cédula de ciudadanía</option>
+                                <option value="TI">Tarjeta de identidad</option>
+                                <option value="CE">Cédula de extranjería</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="doc">Número de documento</label>
+                            <input id="doc" name="doc" type="text" readonly />
+                        </div>
+                        <div class="field-group">
+                            <label for="correo">Correo electrónico</label>
+                            <input id="correo" name="correo" type="email" required />
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="telefono">Teléfono</label>
+                            <input id="telefono" name="telefono" type="text" required />
+                        </div>
+                        <div class="field-group">
+                            <label for="pago">Forma de pago</label>
+                            <select id="pago" name="pago" required>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Tarjeta">Tarjeta</option>
+                                <option value="Nequi">Nequi</option>
+                                <option value="Daviplata">Daviplata</option>
+                                <option value="PSE">PSE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="departamento">Departamento</label>
+                            <input id="departamento" name="departamento" type="text" required />
+                        </div>
+                        <div class="field-group">
+                            <label for="ciudad">Ciudad</label>
+                            <input id="ciudad" name="ciudad" type="text" required />
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="barrio">Barrio</label>
+                            <input id="barrio" name="barrio" type="text" required />
+                        </div>
+                        <div class="field-group">
+                            <label for="direccion">Dirección</label>
+                            <input id="direccion" name="direccion" type="text" required />
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button type="submit" class="primary">Guardar cambios</button>
+                    </div>
+                    <p id="profileMessage" class="profile-message" aria-live="polite"></p>
+                </form>
+            </section>
+
+            <section class="profile-card">
+                <h2>Cambiar contraseña</h2>
+                <form id="passwordForm">
+                    <div class="field-group">
+                        <label for="currentPassword">Contraseña actual</label>
+                        <input id="currentPassword" type="password" required placeholder="Contraseña actual" />
+                    </div>
+                    <div class="field-group">
+                        <label for="newPassword">Nueva contraseña</label>
+                        <input id="newPassword" type="password" required placeholder="Nueva contraseña" />
+                    </div>
+                    <div class="field-group">
+                        <label for="confirmPassword">Confirmar nueva contraseña</label>
+                        <input id="confirmPassword" type="password" required placeholder="Repite la nueva contraseña" />
+                    </div>
+                    <div class="profile-actions">
+                        <button type="submit" class="secondary">Actualizar contraseña</button>
+                    </div>
+                    <p id="passwordMessage" class="profile-message" aria-live="polite"></p>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const userId = getUser()?._id;
+
+        function llenarFormulario(usuario) {
+            if (!usuario) return;
+            document.getElementById('nombre').value = usuario.nombre || '';
+            document.getElementById('tipoDoc').value = usuario.tipoDoc || 'CC';
+            document.getElementById('doc').value = usuario.doc || '';
+            document.getElementById('correo').value = usuario.correo || '';
+            document.getElementById('telefono').value = usuario.telefono || '';
+            document.getElementById('departamento').value = usuario.departamento || '';
+            document.getElementById('ciudad').value = usuario.ciudad || '';
+            document.getElementById('barrio').value = usuario.barrio || '';
+            document.getElementById('direccion').value = usuario.direccion || '';
+            document.getElementById('pago').value = usuario.pago || 'Efectivo';
+        }
+
+        async function renderProfile() {
+            const usuario = getUser();
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+            llenarFormulario(usuario);
+        }
+
+        async function actualizarPerfil(event) {
+            event.preventDefault();
+            const mensaje = document.getElementById('profileMessage');
+            mensaje.textContent = '';
+            const usuario = getUser();
+            if (!usuario || !usuario._id) {
+                mensaje.textContent = 'No se encontró el usuario.';
+                return;
+            }
+
+            const body = {
+                nombre: document.getElementById('nombre').value.trim(),
+                tipoDoc: document.getElementById('tipoDoc').value,
+                correo: document.getElementById('correo').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                departamento: document.getElementById('departamento').value.trim(),
+                ciudad: document.getElementById('ciudad').value.trim(),
+                barrio: document.getElementById('barrio').value.trim(),
+                direccion: document.getElementById('direccion').value.trim(),
+                pago: document.getElementById('pago').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/usuarios/${usuario._id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.mensaje || 'No se pudo actualizar el perfil.');
+                }
+                if (data.usuario) {
+                    saveUser(data.usuario);
+                }
+                mensaje.style.color = 'green';
+                mensaje.textContent = data.mensaje || 'Perfil actualizado correctamente.';
+            } catch (error) {
+                mensaje.style.color = 'red';
+                mensaje.textContent = `❌ ${error.message}`;
+            }
+        }
+
+        async function cambiarContrasena(event) {
+            event.preventDefault();
+            const mensaje = document.getElementById('passwordMessage');
+            mensaje.textContent = '';
+
+            const usuario = getUser();
+            if (!usuario || !usuario._id) {
+                mensaje.textContent = 'No se encontró el usuario.';
+                return;
+            }
+
+            const currentPassword = document.getElementById('currentPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                mensaje.style.color = 'red';
+                mensaje.textContent = 'Completa todos los campos.';
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                mensaje.style.color = 'red';
+                mensaje.textContent = 'Las contraseñas nuevas no coinciden.';
+                return;
+            }
+            if (newPassword.length < 8) {
+                mensaje.style.color = 'red';
+                mensaje.textContent = 'La nueva contraseña debe tener al menos 8 caracteres.';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/usuarios/${usuario._id}/password`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.mensaje || 'No se pudo cambiar la contraseña.');
+                }
+                mensaje.style.color = 'green';
+                mensaje.textContent = data.mensaje || 'Contraseña actualizada correctamente.';
+                document.getElementById('passwordForm').reset();
+            } catch (error) {
+                mensaje.style.color = 'red';
+                mensaje.textContent = `❌ ${error.message}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProfile();
+            document.getElementById('profileForm').addEventListener('submit', actualizarPerfil);
+            document.getElementById('passwordForm').addEventListener('submit', cambiarContrasena);
+        });
+    </script>
+</body>
+
+</html>

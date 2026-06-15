@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zona Admin - House Solutions</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="auth.js"></script>
+    <style>
+        main {
+            width: 100%;
+            padding: 32px 24px 56px;
+        }
+
+        .admin-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            max-width: 1180px;
+            margin: 0 auto 24px;
+        }
+
+        .admin-title {
+            margin: 0;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .admin-actions button {
+            border: none;
+            border-radius: 16px;
+            padding: 12px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            background: var(--accent);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .admin-actions button:hover {
+            transform: translateY(-1px);
+            background: #d87213;
+        }
+
+        .admin-card {
+            max-width: 1180px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid rgba(31, 79, 128, 0.12);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 18px 40px rgba(31, 79, 128, 0.08);
+        }
+
+        .admin-card p {
+            margin: 0 0 16px;
+            color: var(--muted);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(31, 79, 128, 0.08);
+            text-align: left;
+            color: var(--text);
+        }
+
+        .admin-table th {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .admin-table tbody tr:hover {
+            background: rgba(31, 79, 128, 0.04);
+        }
+
+        .admin-message {
+            margin-top: 12px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        @media (max-width: 900px) {
+            .admin-table th,
+            .admin-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .admin-table tr {
+                margin-bottom: 16px;
+                display: block;
+            }
+
+            .admin-table td {
+                border: none;
+                padding: 10px 0;
+            }
+
+            .admin-table td::before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 700;
+                margin-bottom: 6px;
+                color: var(--primary);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        requireLogin();
+    </script>
+
+    <header>
+        <img src="assets/logo.png" alt="Logo House Solutions" class="logo" />
+        <div class="acciones-header">
+            <span onclick="window.location.href='index.html'">🏠 Catálogo</span>
+            <span onclick="logout()">🚪 Cerrar sesión</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="admin-header">
+            <div>
+                <h1 class="admin-title">Zona de administrador</h1>
+                <p>Visualiza los usuarios registrados y la información de la plataforma.</p>
+            </div>
+            <div class="admin-actions">
+                <button onclick="loadUsers()">Actualizar lista</button>
+            </div>
+        </div>
+
+        <section class="admin-card">
+            <p>Esta sección muestra los usuarios registrados actualmente en la aplicación.</p>
+            <table class="admin-table" id="adminTable">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Ciudad</th>
+                        <th>Pago</th>
+                        <th>Rol</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody">
+                    <tr>
+                        <td colspan="8">Cargando datos...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="admin-message" id="adminMessage"></p>
+        </section>
+    </main>
+
+    <script>
+        async function loadUsers() {
+            const messageEl = document.getElementById('adminMessage');
+            const tableBody = document.getElementById('adminTableBody');
+            messageEl.textContent = '';
+            tableBody.innerHTML = '<tr><td colspan="6">Cargando datos...</td></tr>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/usuarios`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.mensaje || data.error || 'Error al cargar usuarios');
+                }
+
+                if (!Array.isArray(data)) {
+                    throw new Error('Respuesta inesperada del servidor');
+                }
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="8">No hay usuarios registrados.</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = data.map(usuario => `
+                    <tr>
+                        <td data-label="Nombre">${usuario.nombre || '-'}</td>
+                        <td data-label="Documento">${usuario.doc || '-'}</td>
+                        <td data-label="Correo">${usuario.correo || '-'}</td>
+                        <td data-label="Teléfono">${usuario.telefono || '-'}</td>
+                        <td data-label="Ciudad">${usuario.ciudad || '-'}</td>
+                        <td data-label="Pago">${usuario.pago || '-'}</td>
+                        <td data-label="Rol">
+                            <select id="rol-${usuario._id}">
+                                <option value="cliente" ${usuario.rol === 'cliente' ? 'selected' : ''}>Cliente</option>
+                                <option value="empleado" ${usuario.rol === 'empleado' ? 'selected' : ''}>Empleado</option>
+                                <option value="administrador" ${usuario.rol === 'administrador' ? 'selected' : ''}>Administrador</option>
+                            </select>
+                        </td>
+                        <td data-label="Acción">
+                            <button onclick="updateUserRole('${usuario._id}')">Guardar</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                tableBody.innerHTML = '<tr><td colspan="8">No se pudieron cargar los datos.</td></tr>';
+                messageEl.textContent = `❌ ${error.message}`;
+                messageEl.style.color = 'red';
+            }
+        }
+
+        async function updateUserRole(userId) {
+            const messageEl = document.getElementById('adminMessage');
+            messageEl.textContent = '';
+            const select = document.getElementById(`rol-${userId}`);
+            if (!select) {
+                messageEl.textContent = 'No se encontró el selector de rol.';
+                messageEl.style.color = 'red';
+                return;
+            }
+
+            const rol = select.value;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/usuarios/${userId}/role`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ rol })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.mensaje || data.error || 'No se pudo actualizar el rol');
+                }
+                messageEl.style.color = 'green';
+                messageEl.textContent = 'Rol actualizado correctamente.';
+                loadUsers();
+            } catch (error) {
+                messageEl.style.color = 'red';
+                messageEl.textContent = `❌ ${error.message}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+
+</html>
